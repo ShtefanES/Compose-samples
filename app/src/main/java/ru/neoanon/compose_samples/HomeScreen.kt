@@ -1,9 +1,17 @@
 package ru.neoanon.compose_samples
 
+import android.graphics.Paint.Align
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
@@ -11,7 +19,12 @@ fun HomeScreen() {
 	Text(
 		text = "Home screen title",
 		fontSize = 16.sp,
-		color = Color.Green,
+		color = Color.White,
+		maxLines = 1,
+		overflow = TextOverflow.Ellipsis,
+		textAlign = TextAlign.Center,
+		modifier = Modifier.background(color = Color.Black)
+			.fillMaxWidth(),
 	)
 }
 
