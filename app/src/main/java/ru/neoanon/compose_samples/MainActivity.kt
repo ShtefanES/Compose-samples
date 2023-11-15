@@ -9,10 +9,10 @@ class MainActivity : ComponentActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		val state = mutableStateOf(true)
+		val state = mutableStateOf("Init text")
 		setContent {
-			HomeScreen(state) { checked ->
-				state.value = checked
+			HomeScreen(state) { newText ->
+				state.value = newText
 			}
 		}
 	}
