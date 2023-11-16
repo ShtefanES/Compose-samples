@@ -9,11 +9,19 @@ class MainActivity : ComponentActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		val state = mutableStateOf(0)
+		val state = mutableStateOf(HomeState(counterClick = 0, uppercase = false))
 		setContent {
-			HomeScreen(state) {
-				state.value ++
-			}
+			HomeScreen(
+				state,
+				onCounterClick = {
+					val currentState = state.value
+					state.value = currentState.copy(counterClick = currentState.counterClick + 1)
+				},
+				onCheckedChange = { newUppercase ->
+					val currentState = state.value
+					state.value = currentState.copy(uppercase = newUppercase)
+				},
+			)
 		}
 	}
 }
