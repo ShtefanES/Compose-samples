@@ -1,4 +1,5 @@
 <resources>
 	<string name="app_name">Compose-samples</string>
 	<string name="title">Home screen title</string>
+	<string name="details">Description of some details</string>
 </resources>

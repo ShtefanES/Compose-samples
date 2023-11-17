@@ -1,67 +1,30 @@
 package ru.neoanon.compose_samples
 
-import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
-import okhttp3.internal.toHexString
 
 const val TAG = "MY_TAG"
 
 @Composable
-fun HomeScreen(
-	state: State<HomeState>,
-	onCounterClick: () -> Unit,
-	onCheckedChange: (Boolean) -> Unit,
-) {
-	val homeState = state.value
-	Log.d(TAG, "HomeScreen")
+fun HomeScreen() {
+	var checked by remember { mutableStateOf(false) }
 	Column {
-		ClickCounter(homeState.counterClick, homeState.uppercase, onCounterClick)
-		Row(verticalAlignment = Alignment.CenterVertically) {
-			Checkbox(checked = homeState.uppercase, onCheckedChange = onCheckedChange)
-			Text("Uppercase", fontSize = 32.sp, modifier = Modifier.clickable {
-				val currentCheckedValue = state.value.uppercase
-				onCheckedChange(!currentCheckedValue)
-			})
+		Row(verticalAlignment = CenterVertically) {
+			Checkbox(checked = checked, onCheckedChange = { value -> checked = value })
+			Text("More details", fontSize = 18.sp)
+		}
+		if (checked) {
+			Text(text = stringResource(id = R.string.details))
 		}
 	}
 }
-
-@Composable
-fun ClickCounter(
-	counterValue: Int,
-	uppercase: Boolean,
-	onCounterClick: () -> Unit
-) {
-	val evenOdd = remember(uppercase) { EvenOdd(uppercase) }
-	Log.d(TAG, "ClickCounter(counter = $counterValue, uppercase = $uppercase), $evenOdd")
-	Text(
-		text = "Clicks: $counterValue - ${evenOdd.check(counterValue)}",
-		modifier = Modifier.clickable(onClick = onCounterClick),
-		fontSize = 32.sp,
-	)
-}
-
-class EvenOdd(private val uppercase: Boolean) {
-
-	fun check(value: Int): String {
-		var result = if (value % 2 == 0) "even" else "odd"
-		if (uppercase) result = result.uppercase()
-		return result
-	}
-
-	override fun toString(): String {
-		return "EvenOdd(uppercase = $uppercase, hashcode = ${hashCode().toHexString()})"
-	}
-}
-
-data class HomeState(val counterClick: Int, val uppercase: Boolean)
