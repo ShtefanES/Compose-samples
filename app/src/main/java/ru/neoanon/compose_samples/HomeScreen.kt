@@ -1,50 +1,45 @@
 package ru.neoanon.compose_samples
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material.Checkbox
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 const val TAG = "MY_TAG"
 
-@ExperimentalLifecycleComposeApi
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(
+	onNavigateToOrders: () -> Unit,
+	onNavigateToUsers: () -> Unit,
+) {
+	Column() {
+		Text(text = "Home screen")
 
-	val state by viewModel.state.collectAsStateWithLifecycle()
+		Text(text = "go to Orders", Modifier.clickable(onClick = onNavigateToOrders))
 
-	Column {
-		ClickCounter(count = state.clickCounter, viewModel::increaseCounter)
-		EnableFeature(enabled = state.enabledFeature, onEnabledChange = viewModel::changeEnabled)
+		Text(text = "go to Users", Modifier.clickable(onClick = onNavigateToUsers))
 	}
 }
 
 @Composable
-fun ClickCounter(
-	count: Int,
-	onCounterClick: () -> Unit
-) {
-	Text(
-		text = "Clicks: $count",
-		modifier = Modifier.clickable(onClick = onCounterClick)
-	)
+fun OrdersScreen() {
+	Text(text = "Orders screen")
 }
 
 @Composable
-fun EnableFeature(
-	enabled: Boolean,
-	onEnabledChange: (Boolean) -> Unit
-) {
-	Row(verticalAlignment = CenterVertically) {
-		Checkbox(checked = enabled, onCheckedChange = onEnabledChange)
-		Text("enable feature")
-	}
+fun UsersScreen() {
+	Text(text = "Users screen")
 }
