@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 
 class MainActivity : ComponentActivity() {
 
@@ -32,6 +34,13 @@ class MainActivity : ComponentActivity() {
 						}
 						composable("orders") { OrdersScreen() }
 						composable("users") { UsersScreen() }
+						composable(
+							route = "user/{id}",
+							arguments = listOf(navArgument("id") { type = NavType.StringType }),
+						) { navBackStackEntity ->
+							val userId = navBackStackEntity.arguments?.getString("id")
+							UserScreen(userId)
+						}
 					}
 					Row(
 						modifier = Modifier
@@ -42,6 +51,7 @@ class MainActivity : ComponentActivity() {
 						Text(text = "Home", modifier = Modifier.clickable { navController.navigate("home") })
 						Text(text = "Orders", modifier = Modifier.clickable { navController.navigate("orders") })
 						Text(text = "Users", modifier = Modifier.clickable { navController.navigate("users") })
+						Text(text = "User", modifier = Modifier.clickable { navController.navigate("user/100500") })
 					}
 				}
 			}

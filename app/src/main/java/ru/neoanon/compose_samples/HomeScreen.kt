@@ -3,6 +3,7 @@ package ru.neoanon.compose_samples
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,4 +43,13 @@ fun OrdersScreen() {
 @Composable
 fun UsersScreen() {
 	Text(text = "Users screen")
+}
+
+@Composable
+fun UserScreen(id: String?) {
+	Column {
+		Text(text = "User screen")
+
+		Text(text = "User $id")
+	}
 }
