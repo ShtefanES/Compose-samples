@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -19,21 +20,12 @@ const val TAG = "MY_TAG"
 
 @Composable
 fun HomeScreen() {
-	Column {
-		var checked by remember { mutableStateOf(true) }
-		Checkbox(checked = checked, onCheckedChange = { checked = it })
-
-		if (checked) {
-			val scope = rememberCoroutineScope()
-			Text(text = "Click", modifier = Modifier.clickable {
-				scope.launch {
-					var count = 0
-					while (true) {
-						Log.d(TAG, "count = ${count++}")
-						delay(1000)
-					}
-				}
-			})
+	val count by produceState(initialValue = 0) {
+		while (true) {
+			delay(1000)
+			value++
 		}
 	}
+
+	Text(text = "count = $count")
 }
