@@ -1,48 +1,53 @@
 package ru.neoanon.compose_samples
 
-import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Checkbox
-import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontStyle
 
 const val TAG = "MY_TAG"
+val LocalFontStyle = compositionLocalOf { FontStyle.Normal }
 
 @Composable
-fun HomeScreen(
-) {
+fun HomeScreen() {
 	Column {
-		val sliderPosition = remember { mutableStateOf(1f) }
-		MySlider(sliderPosition = sliderPosition)
+		val italicState = remember { mutableStateOf(false) }
+		MyCheckbox("Italic", italicState)
 
-		val roundedPosition by remember {
-			derivedStateOf { sliderPosition.value.roundToInt() }
+		val fontStyle = if (italicState.value) FontStyle.Italic else FontStyle.Normal
+		val localFontStyle = LocalFontStyle.provides(fontStyle)
+		CompositionLocalProvider(localFontStyle) {
+			MyText(text = "Text 1")
+			MyText(text = "Text 2")
+			MyText(text = "Text 3")
+			MyText(text = "Text 4")
 		}
-		Text(text = "$roundedPosition")
-		Log.d(TAG, "HomeScreen $roundedPosition")
+		MyText(text = "Text 5")
 	}
 }
 
 @Composable
-fun MySlider(sliderPosition: MutableState<Float>) {
-	Log.d(TAG, "MySlider")
-	Slider(
-		value = sliderPosition.value,
-		valueRange = 1f..10f,
-		onValueChange = { sliderPosition.value = it }
-	)
+fun MyCheckbox(
+	text: String,
+	checked: MutableState<Boolean>,
+) {
+	Row(verticalAlignment = Alignment.CenterVertically) {
+		Checkbox(checked = checked.value, onCheckedChange = { checked.value = it })
+		Text(text = text)
+	}
+}
+
+@Composable
+fun MyText(
+	text: String
+) {
+	Text(text = text, fontStyle = LocalFontStyle.current)
 }
