@@ -23,8 +23,7 @@ fun HomeScreen() {
 		MyCheckbox("Italic", italicState)
 
 		val fontStyle = if (italicState.value) FontStyle.Italic else FontStyle.Normal
-		val localFontStyle = LocalFontStyle.provides(fontStyle)
-		CompositionLocalProvider(localFontStyle) {
+		CompositionLocalProvider(LocalFontStyle provides fontStyle) {
 			MyText(text = "Text 1")
 			MyText(text = "Text 2")
 			MyText(text = "Text 3")
