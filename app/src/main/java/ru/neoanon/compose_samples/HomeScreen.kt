@@ -31,15 +31,27 @@ fun HomeScreen() {
 	Box(
 		modifier = Modifier.background(Color.LightGray)
 	) {
-		Text(text = "Some text", modifier = Modifier.myLayout())
+		Text(text = "Some text", modifier = Modifier
+			.background(Color.Yellow)
+			.myPadding(1)
+			.background(Color.Red)
+			.myPadding(2)
+			.background(Color.Blue)
+			.myPadding(3)
+			.background(Color.Green)
+		)
 	}
 }
 
-fun Modifier.myLayout() = layout { measurable, constraints ->
-	Log.d(TAG, "constraints = $constraints")
-	val placeable = measurable.measure(constraints) // Measure children
-	Log.d(TAG, "placeable, width = ${placeable.width}, height = ${placeable.height} ")
-	layout(placeable.width, placeable.height) { // Decide own size
-		placeable.placeRelative(0, 0) // Place children
+fun Modifier.myPadding(id: Int) = layout { measurable, constraints ->
+	Log.d(TAG, "myPadding $id, measure child")
+	val placeable = measurable.measure(constraints)
+
+	val myWidth = placeable.width + 50
+	val myHeight = placeable.height + 50
+	Log.d(TAG, "myPadding $id, child: (${placeable.width}, ${placeable.height}), me: ($myWidth, $myHeight)")
+
+	layout(myWidth, myHeight) {
+		placeable.placeRelative(25, 25)
 	}
 }
