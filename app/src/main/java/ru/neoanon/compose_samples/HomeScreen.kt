@@ -19,6 +19,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -28,30 +29,32 @@ val LocalFontStyle = compositionLocalOf { FontStyle.Normal }
 
 @Composable
 fun HomeScreen() {
-	Box(
-		modifier = Modifier.background(Color.LightGray)
-	) {
-		Text(text = "Some text", modifier = Modifier
-			.background(Color.Yellow)
-			.myPadding(1)
-			.background(Color.Red)
-			.myPadding(2)
-			.background(Color.Blue)
-			.myPadding(3)
-			.background(Color.Green)
-		)
+	MyColumn(modifier = Modifier.background(Color.Gray)) {
+		Text("Text 1")
+		Text("Text 2")
+		Text("Text 3")
+		Text("Text 4")
 	}
 }
 
-fun Modifier.myPadding(id: Int) = layout { measurable, constraints ->
-	Log.d(TAG, "myPadding $id, measure child")
-	val placeable = measurable.measure(constraints)
-
-	val myWidth = placeable.width + 50
-	val myHeight = placeable.height + 50
-	Log.d(TAG, "myPadding $id, child: (${placeable.width}, ${placeable.height}), me: ($myWidth, $myHeight)")
-
-	layout(myWidth, myHeight) {
-		placeable.placeRelative(25, 25)
+@Composable
+fun MyColumn(
+	modifier: Modifier = Modifier,
+	content: @Composable () -> Unit
+) {
+	Layout(
+		modifier = modifier,
+		content = content
+	) { measurables, constraints ->
+		val placeables = measurables.map {measurable ->
+			measurable.measure(constraints) // Measure children
+		}
+		layout(placeables.maxOf { it.width }, placeables.sumOf { it.height }) { // Decide own size
+			var y = 0
+			placeables.forEach { placeable ->
+				placeable.placeRelative(x = 0, y = y) // Place children
+				y += placeable.height
+			}
+		}
 	}
 }
