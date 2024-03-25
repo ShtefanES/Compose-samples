@@ -1,42 +1,41 @@
 package ru.neoanon.compose_samples
 
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontStyle
+import kotlinx.coroutines.delay
 
 const val TAG = "MY_TAG"
 val LocalFontStyle = compositionLocalOf { FontStyle.Normal }
 
 @Composable
 fun HomeScreen() {
-	Canvas(modifier = Modifier.fillMaxSize()) {
-		withTransform({
-						  translate( - center.x + 100f, - center.y + 100f)
-						  rotate(degrees = 45f)
-					  }) {
-			cross()
+	val degrees by produceState(initialValue = 0f) {
+		while (true) {
+			delay(100)
+			value = (value + 5f).rem(360)
 		}
 	}
-}
 
-private fun DrawScope.cross() {
-	drawLine(
-		color = Color.Green,
-		start = center.plus(Offset(-50f,-50f)),
-		end = center.plus(Offset(50f,50f)),
-		strokeWidth = 5f
-	)
-	drawLine(
-		color = Color.Green,
-		start = center.plus(Offset(50f,-50f)),
-		end = center.plus(Offset(-50f,50f)),
-		strokeWidth = 5f
+	Spacer(modifier = Modifier
+		.fillMaxSize()
+		.graphicsLayer { rotationZ = degrees }
+		.drawBehind {
+			drawRect(
+				brush = Brush.linearGradient(listOf(Color.Green, Color.Blue)),
+				size = size.div(2f),
+				topLeft = Offset(size.width / 4f, size.height / 4f)
+			)
+		}
 	)
 }
