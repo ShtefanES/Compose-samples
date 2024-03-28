@@ -16,19 +16,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
+import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -37,36 +41,23 @@ val LocalFontStyle = compositionLocalOf { FontStyle.Normal }
 
 @Composable
 fun HomeScreen() {
-	val myAnimation = remember {
-		Animatable(initialValue = 10.dp, typeConverter = Dp.VectorConverter)
-	}
+	Column {
+		val scope = rememberCoroutineScope()
+		val animatableCount = remember {
+			Animatable(initialValue = 100, typeConverter = Int.VectorConverter)
+		}
+		var checked by remember { mutableStateOf(false) }
 
-	Spacer(modifier = Modifier
-		.background(Color.Green)
-		.height(50.dp)
-		.width(myAnimation.value)
-	)
+		Checkbox(checked = checked, onCheckedChange = {
+			checked = it
+			scope.launch {
+				animatableCount.animateTo(
+					targetValue = if (checked) 500 else 100,
+					animationSpec = tween(1000)
+				)
+			}
+		})
 
-	LaunchedEffect(Unit) {
-		delay(1000)
-		myAnimation.animateTo(
-			targetValue = 250.dp,
-			animationSpec = createSpec()
-		)
-	}
-}
-
-val MyEasing: Easing = Easing { fraction ->
-	when {
-		fraction < 0.25 -> 0F
-		fraction < 0.5 -> 0.25F
-		fraction < 0.75 -> 0.5F
-		fraction < 1 -> 0.75F
-		else -> 1F
+		Text(text = "${animatableCount.value}", fontSize = 30.sp)
 	}
 }
-private fun createSpec(): AnimationSpec<Dp> =
-	tween(
-		durationMillis = 1000,
-		easing = MyEasing
-	)
