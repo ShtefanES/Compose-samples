@@ -8,6 +8,7 @@ import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.TargetBasedAnimation
 import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -42,22 +43,13 @@ val LocalFontStyle = compositionLocalOf { FontStyle.Normal }
 @Composable
 fun HomeScreen() {
 	Column {
-		val scope = rememberCoroutineScope()
-		val animatableCount = remember {
-			Animatable(initialValue = 100, typeConverter = Int.VectorConverter)
-		}
 		var checked by remember { mutableStateOf(false) }
+		Checkbox(checked = checked, onCheckedChange = {checked = it })
 
-		Checkbox(checked = checked, onCheckedChange = {
-			checked = it
-			scope.launch {
-				animatableCount.animateTo(
-					targetValue = if (checked) 500 else 100,
-					animationSpec = tween(1000)
-				)
-			}
-		})
-
-		Text(text = "${animatableCount.value}", fontSize = 30.sp)
+		val animatedCount = animateIntAsState(
+			targetValue = if (checked) 500 else 100,
+			animationSpec = tween(1000),
+		)
+		Text(text = "${animatedCount.value}", fontSize = 30.sp)
 	}
 }
